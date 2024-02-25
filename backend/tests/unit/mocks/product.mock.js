@@ -9,6 +9,8 @@ const productListFromModel = [
 
 const noProductList = [];
 
+const newProductFromModel = { id: 4, name: 'Esquilo de pelúcia' };
+
 // Service
 const productFromService = {
   status: 'SUCCESSFUL',
@@ -30,12 +32,19 @@ const emptyProductListFromService = {
   data: { message: 'No product registered' },
 };
 
+const newProductFromService = {
+  status: 'CREATED',
+  data: newProductFromModel,
+};
+
 module.exports = {
   productFromModel,
   productListFromModel,
   noProductList,
+  newProductFromModel,
   productFromService,
   productNotFoundFromService,
   productListFromService,
   emptyProductListFromService,
+  newProductFromService,
 };

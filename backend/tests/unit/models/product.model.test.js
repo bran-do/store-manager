@@ -6,6 +6,7 @@ const { productModel } = require('../../../src/models');
 const { 
   productFromModel,
   productListFromModel,
+  newProductFromModel,
 } = require('../mocks/product.mock');
 
 describe('PRODUCT MODEL:', function () {
@@ -26,6 +27,16 @@ describe('PRODUCT MODEL:', function () {
 
     expect(product).to.be.an('object');
     expect(product).to.deep.equal(productFromModel);
+  });
+
+  it('Inserindo product', async function () {
+    sinon.stub(connection, 'execute').resolves([[newProductFromModel]]);
+
+    const INPUT_DATA = { name: 'Esquilo de pelúcia' };
+    const insertedProduct = await productModel.insert(INPUT_DATA);
+
+    expect(insertedProduct).to.be.an('object');
+    expect(insertedProduct).to.deep.equal(newProductFromModel);
   });
 
   afterEach(function () { sinon.restore(); });

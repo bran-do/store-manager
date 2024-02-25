@@ -10,6 +10,8 @@ const {
   productListFromService,
   productFromService,
   emptyProductListFromService,
+  newProductFromModel,
+  newProductFromService,
 } = require('../mocks/product.mock');
 
 describe('PRODUCT SERVICE:', function () {
@@ -49,6 +51,16 @@ describe('PRODUCT SERVICE:', function () {
 
     expect(result.status).to.equal('NOT_FOUND');
     expect(result.data.message).to.equal('Product not found');
+  });
+
+  it('Inserindo product com sucesso', async function () {
+    sinon.stub(productModel, 'insert').resolves(newProductFromModel);
+
+    const INPUT_DATA = { name: 'Esquilo de pelúcia' };
+    const result = await productService.insertNewProduct(INPUT_DATA);
+
+    expect(result.status).to.equal('CREATED');
+    expect(result.data).to.deep.equal(newProductFromService.data);
   });
 
   afterEach(function () { sinon.restore(); });
