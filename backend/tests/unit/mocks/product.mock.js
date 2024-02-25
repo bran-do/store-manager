@@ -1,12 +1,5 @@
-// Model & DB
-const productFromDB = { id: 2, name: 'Traje de encolhimento' };
+// Model
 const productFromModel = { id: 2, name: 'Traje de encolhimento' };
-
-const productListFromDB = [
-  { id: 1, name: 'Martelo do Thor' },
-  { id: 2, name: 'Traje de encolhimento' },
-  { id: 3, name: 'Escudo do Capitão América' },
-];
 
 const productListFromModel = [
   { id: 1, name: 'Martelo do Thor' },
@@ -38,9 +31,7 @@ const emptyProductListFromService = {
 };
 
 module.exports = {
-  productFromDB,
   productFromModel,
-  productListFromDB,
   productListFromModel,
   noProductList,
   productFromService,

@@ -4,15 +4,13 @@ const sinon = require('sinon');
 const connection = require('../../../src/models/connection');
 const { productModel } = require('../../../src/models');
 const { 
-  productFromDB,
   productFromModel,
-  productListFromDB,
   productListFromModel,
 } = require('../mocks/product.mock');
 
 describe('PRODUCT MODEL:', function () {
-  it('Recuperando lista de todos os products', async function () {
-    sinon.stub(connection, 'execute').resolves([productListFromDB]);
+  it('Listando todos products', async function () {
+    sinon.stub(connection, 'execute').resolves([productListFromModel]);
 
     const productList = await productModel.findAll();
 
@@ -20,8 +18,8 @@ describe('PRODUCT MODEL:', function () {
     expect(productList).to.deep.equal(productListFromModel);
   });
 
-  it('Recuperando product por id com sucesso', async function () {
-    sinon.stub(connection, 'execute').resolves([[productFromDB]]);
+  it('Recuperando product por id', async function () {
+    sinon.stub(connection, 'execute').resolves([[productFromModel]]);
 
     const INPUT_DATA = 2;
     const product = await productModel.findById(INPUT_DATA);

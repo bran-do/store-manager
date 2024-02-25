@@ -18,7 +18,7 @@ const {
 const app = require('../../../src/app');
 
 describe('PRODUCT CONTROLLER', function () {
-  it('Recuperando lista de todos os products com sucesso', async function () {
+  it('Listando todos products com sucesso', async function () {
     sinon.stub(productService, 'getAllProducts').resolves(productListFromService);
 
     const res = await chai.request(app).get('/products');
@@ -28,7 +28,7 @@ describe('PRODUCT CONTROLLER', function () {
     expect(body).to.deep.equal(productListFromService.data);
   });
 
-  it('Recuperando lista de todos os products sem sucesso (vazia)', async function () {
+  it('Listando todos products sem sucesso (lista vazia)', async function () {
     sinon.stub(productService, 'getAllProducts').resolves(emptyProductListFromService);
 
     const res = await chai.request(app).get('/products');
