@@ -76,6 +76,23 @@ describe('PRODUCT CONTROLLER', function () {
     expect(body).to.deep.equal(newProductFromService.data);
   });
 
+  it('Inserindo product sem campos obrigatórios', async function () {
+    const BODY_INPUT_DATA = {};
+
+    const missingFieldMessage = {
+      message: '"name" is required',
+    };
+
+    const res = await chai.request(app)
+      .post('/products')
+      .send(BODY_INPUT_DATA);
+
+    const { status, body } = res;
+
+    expect(status).to.equal(400);
+    expect(body).to.deep.equal(missingFieldMessage);
+  });
+
   it('Retorna status code 500 para status não-mapeado no mapStatusHTTP', async function () {
     const unmappedServiceStatus = {
       status: 'STATUS_2222',

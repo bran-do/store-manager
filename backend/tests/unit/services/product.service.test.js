@@ -63,5 +63,18 @@ describe('PRODUCT SERVICE:', function () {
     expect(result.data).to.deep.equal(newProductFromService.data);
   });
 
+  it('Inserindo product com valores inválidos', async function () {
+    const INPUT_DATA = { name: 'Chá' };
+
+    const invalidValueMessage = {
+      message: '"name" length must be at least 5 characters long',
+    };
+
+    const result = await productService.insertNewProduct(INPUT_DATA);
+
+    expect(result.status).to.equal('INVALID_VALUE');
+    expect(result.data).to.deep.equal(invalidValueMessage);
+  });
+
   afterEach(function () { sinon.restore(); });
 });

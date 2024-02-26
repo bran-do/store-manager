@@ -1,4 +1,5 @@
 const { productModel } = require('../models');
+const { validateNewProduct } = require('./validations/validateInputValues');
 
 const getAllProducts = async () => {
   const productList = await productModel.findAll();
@@ -17,6 +18,9 @@ const getProductById = async (id) => {
 };
 
 const insertNewProduct = async (newProduct) => {
+  const invalidValue = validateNewProduct(newProduct);
+  if (invalidValue) return invalidValue;
+
   const productInsideDB = await productModel.insert(newProduct);
 
   return { status: 'CREATED', data: productInsideDB };
