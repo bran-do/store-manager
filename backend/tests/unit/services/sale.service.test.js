@@ -11,6 +11,8 @@ const {
   emptySaleListFromService,
   saleFromService,
   saleNotFoundService,
+  newSaleFromModel,
+  newSaleFromService,
 } = require('../mocks/sale.mock');
 
 describe('SALE SERVICE:', function () {
@@ -50,6 +52,29 @@ describe('SALE SERVICE:', function () {
 
     expect(result.status).to.equal('NOT_FOUND');
     expect(result.data.message).to.deep.equal(saleNotFoundService.data.message);
+  });
+
+  it('Inserindo sale com sucesso', async function () {
+    sinon.stub(saleModel, 'insert').resolves(newSaleFromModel);
+
+    const INPUT_DATA = {
+      id: 3,
+      itemsSold: [
+        {
+          productId: 1,
+          quantity: 1, 
+        },
+        {
+          productId: 2,
+          quantity: 5,
+        },
+      ],
+    };
+
+    const result = await saleService.insertNewSale(INPUT_DATA);
+
+    expect(result.status).to.equal('CREATED');
+    expect(result.data).to.deep.equal(newSaleFromService.data);
   });
 
   afterEach(function () { sinon.restore(); });

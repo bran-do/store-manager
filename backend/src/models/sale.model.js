@@ -1,5 +1,17 @@
 const camelize = require('camelize');
 const connection = require('./connection');
+const { getFormattedColumns, getFormattedPlaceholders } = require('../utils/queryFormatting');
+
+async function registerSaleProduct(product, saleId) {
+  const columns = getFormattedColumns(product);
+  const placeholders = getFormattedPlaceholders(product);
+
+  await connection.execute(
+    `INSERT INTO sales_products (sale_id, ${columns})
+      VALUES (?,${placeholders})`,
+    [saleId, ...Object.values(product)],
+  );
+}
 
 const findAll = async () => {
   const [saleList] = await connection.execute(
@@ -20,6 +32,7 @@ const findById = async (id) => {
     FROM sales_products
     INNER JOIN sales AS sl
       ON sale_id = sl.id
+      const itemsSold = await getSaleItems(insertId);
     WHERE sale_id = ?
     ORDER BY product_id ASC`,
     [id],
@@ -28,7 +41,20 @@ const findById = async (id) => {
   return camelize(sale);
 };
 
+const insert = async (sale) => {
+  const nowDate = new Date();
+  const [{ insertId }] = await connection.execute(
+    'INSERT INTO sales (date) VALUE (?)',
+    [nowDate],
+  );
+
+  sale.forEach((product) => registerSaleProduct(product, insertId));
+
+  return { id: insertId, itemsSold: sale };
+};
+
 module.exports = {
   findAll,
   findById,
+  insert,
 };

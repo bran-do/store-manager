@@ -1,3 +1,4 @@
+// Model & DB
 const saleFromModel = [
   {
     saleId: 1,
@@ -36,6 +37,22 @@ const saleListFromModel = [
 
 const noSaleList = [];
 
+const saleIdFromDB = { insertId: 3 };
+
+const newSaleFromModel = {
+  id: 3,
+  itemsSold: [
+    {
+      productId: 1,
+      quantity: 1, 
+    },
+    {
+      productId: 2,
+      quantity: 5,
+    },
+  ],
+};
+
 // Service
 const saleFromService = {
   status: 'SUCCESSFUL',
@@ -57,12 +74,32 @@ const emptySaleListFromService = {
   data: { message: 'No sale registered' },
 };
 
+const newSaleFromService = {
+  status: 'CREATED',
+  data: {
+    id: 3,
+    itemsSold: [
+      {
+        productId: 1,
+        quantity: 1, 
+      },
+      {
+        productId: 2,
+        quantity: 5,
+      },
+    ],
+  },
+};
+
 module.exports = {
   saleFromModel,
   saleListFromModel,
   noSaleList,
+  saleIdFromDB,
+  newSaleFromModel,
   saleFromService,
   saleNotFoundService,
   saleListFromService,
   emptySaleListFromService,
+  newSaleFromService,
 };

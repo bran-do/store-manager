@@ -13,6 +13,7 @@ const {
   emptySaleListFromService,
   saleFromService,
   saleNotFoundService,
+  newSaleFromService,
 } = require('../mocks/sale.mock');
 
 const app = require('../../../src/app');
@@ -59,5 +60,29 @@ describe('SALE CONTROLLER:', function () {
 
     expect(status).to.equal(404);
     expect(body).to.deep.equal(saleNotFoundService.data);
+  });
+
+  it('Inserindo sale com sucesso', async function () {
+    sinon.stub(saleService, 'insertNewSale').resolves(newSaleFromService);
+
+    const BODY_INPUT_DATA = [
+      {
+        productId: 1,
+        quantity: 1,
+      },
+      {
+        productId: 2,
+        quantity: 5,
+      },
+    ];
+
+    const res = await chai.request(app)
+      .post('/sales')
+      .send(BODY_INPUT_DATA);
+
+    const { status, body } = res;
+
+    expect(status).to.equal(201);
+    expect(body).to.deep.equal(newSaleFromService.data);
   });
 });
