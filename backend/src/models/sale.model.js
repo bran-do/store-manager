@@ -32,12 +32,10 @@ const findById = async (id) => {
     FROM sales_products
     INNER JOIN sales AS sl
       ON sale_id = sl.id
-      const itemsSold = await getSaleItems(insertId);
     WHERE sale_id = ?
     ORDER BY product_id ASC`,
     [id],
   );
-
   return camelize(sale);
 };
 
