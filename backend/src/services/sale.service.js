@@ -1,4 +1,5 @@
 const { saleModel } = require('../models');
+const { validateNewSale } = require('./validations/validateInputValues');
 
 const getAllSales = async () => {
   const saleList = await saleModel.findAll();
@@ -21,9 +22,12 @@ const getSaleById = async (id) => {
 };
 
 const insertNewSale = async (newSale) => {
-  const registeredSaleData = await saleModel.insert(newSale);
+  const invalidSale = await validateNewSale(newSale);
+  if (invalidSale) return invalidSale;
 
-  return { status: 'CREATED', data: registeredSaleData };
+  const saleInsideDB = await saleModel.insert(newSale);
+
+  return { status: 'CREATED', data: saleInsideDB };
 };
 
 module.exports = {
