@@ -9,14 +9,6 @@ const validateNewProduct = ({ name }) => {
   }
 };
 
-async function validateNewSaleProductId(id) {
-  const existingId = await productModel.findById(id);
-
-  if (!existingId) {
-    return { status: 'NOT_FOUND', data: { message: 'Product not found' } };
-  }
-}
-
 const validateNewSale = async (newSale) => {
   for (let i = 0; i < newSale.length; i += 1) {
     const { productId, quantity } = newSale[i];
@@ -25,9 +17,15 @@ const validateNewSale = async (newSale) => {
     if (error) {
       return { status: 'INVALID_VALUE', data: { message: error.message } };
     }
+  }
 
-    const invalidId = await validateNewSaleProductId(productId);
-    if (invalidId) return invalidId;
+  const productIds = newSale.map((product) => product.productId);
+  // Evitando repetições
+  const filteredIds = productIds.filter((id, index, self) => self.indexOf(id) === index);
+
+  const foundIds = await productModel.findByMultipleIds(filteredIds);
+  if (filteredIds.length !== foundIds.length) {
+    return { status: 'NOT_FOUND', data: { message: 'Product not found' } };
   }
 };
 

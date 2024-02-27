@@ -19,6 +19,16 @@ const findById = async (id) => {
   return camelize(product);
 };
 
+const findByMultipleIds = async (idArray) => {
+  const placeholders = idArray.map(() => '?').join(',');
+  const [foundIds] = await connection.execute(
+    `SELECT id FROM products WHERE id IN (${placeholders})`,
+    idArray,
+  );
+
+  return foundIds.map((object) => object.id);
+};
+
 const insert = async (product) => {
   const columns = getFormattedColumns(product);
   const placeholders = getFormattedPlaceholders(product);
@@ -37,5 +47,6 @@ const insert = async (product) => {
 module.exports = {
   findAll,
   findById,
+  findByMultipleIds,
   insert,
 };
