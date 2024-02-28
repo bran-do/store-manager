@@ -85,4 +85,25 @@ describe('SALE CONTROLLER:', function () {
     expect(status).to.equal(201);
     expect(body).to.deep.equal(newSaleFromService.data);
   });
+
+  it('Inserindo sale sem productId', async function () {
+    sinon.stub(saleService, 'insertNewSale').resolves(newSaleFromService);
+
+    const BODY_INPUT_DATA = [
+      {
+        productId: 1,
+        quantity: 1,
+      },
+      {
+        quantity: 5,
+      },
+    ];
+
+    const res = await chai.request(app)
+      .post('/sales')
+      .send(BODY_INPUT_DATA);
+
+    expect(res.status).to.equal(400);
+    expect(res.body).to.deep.equal({ message: '"productId" is required' });
+  });
 });

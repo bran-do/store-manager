@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 
-const { saleModel } = require('../../../src/models');
+const { saleModel, productModel } = require('../../../src/models');
 const { saleService } = require('../../../src/services');
 const { 
   noSaleList, 
@@ -11,9 +11,10 @@ const {
   emptySaleListFromService,
   saleFromService,
   saleNotFoundService,
-  // newSaleFromModel,
-  // newSaleFromService,
+  newSaleFromModel,
+  newSaleFromService,
 } = require('../mocks/sale.mock');
+const { multipleIdResultFromModel } = require('../mocks/product.mock');
 
 describe('SALE SERVICE:', function () {
   it('Lista todas sales com sucesso', async function () {
@@ -48,26 +49,27 @@ describe('SALE SERVICE:', function () {
     sinon.stub(saleModel, 'findById').resolves(noSaleList);
 
     const INPUT_DATA = 9999;
+    
     const result = await saleService.getSaleById(INPUT_DATA);
 
     expect(result.status).to.equal('NOT_FOUND');
     expect(result.data.message).to.deep.equal(saleNotFoundService.data.message);
   });
 
-  /*
   it('Inserindo sale com sucesso', async function () {
     sinon.stub(saleModel, 'insert').resolves(newSaleFromModel);
+    sinon.stub(productModel, 'findByMultipleIds').resolves(multipleIdResultFromModel);
 
     const INPUT_DATA = [
-        {
-          productId: 1,
-          quantity: 1, 
-        },
-        {
-          productId: 2,
-          quantity: 5,
-        },
-      ];
+      {
+        productId: 1,
+        quantity: 1, 
+      },
+      {
+        productId: 2,
+        quantity: 5,
+      },
+    ];
 
     const result = await saleService.insertNewSale(INPUT_DATA);
 
@@ -75,6 +77,43 @@ describe('SALE SERVICE:', function () {
     expect(result.data).to.deep.equal(newSaleFromService.data);
   });
 
-  */
+  it('Inserindo sale com quantity inválida', async function () {
+    const INPUT_DATA = [
+      {
+        productId: 1,
+        quantity: 1, 
+      },
+      {
+        productId: 2,
+        quantity: 0,
+      },
+    ];
+
+    const result = await saleService.insertNewSale(INPUT_DATA);
+    
+    expect(result.status).to.equal('INVALID_VALUE');
+    expect(result.data).to.deep.equal({ message: '"quantity" must be greater than or equal to 1' });
+  });
+
+  it('Inserindo sale com productId inexistente', async function () {
+    sinon.stub(productModel, 'findByMultipleIds').resolves([multipleIdResultFromModel]);
+
+    const INPUT_DATA = [
+      {
+        productId: 99,
+        quantity: 1, 
+      },
+      {
+        productId: 2,
+        quantity: 5,
+      },
+    ];
+
+    const result = await saleService.insertNewSale(INPUT_DATA);
+
+    expect(result.status).to.equal('NOT_FOUND');
+    expect(result.data).to.deep.equal({ message: 'Product not found' });
+  });
+
   afterEach(function () { sinon.restore(); });
 });

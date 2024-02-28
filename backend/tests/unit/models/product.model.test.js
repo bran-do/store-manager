@@ -7,6 +7,7 @@ const {
   productFromModel,
   productListFromModel,
   newProductFromModel,
+  multipleIdResultFromDB,
 } = require('../mocks/product.mock');
 
 describe('PRODUCT MODEL:', function () {
@@ -27,6 +28,16 @@ describe('PRODUCT MODEL:', function () {
 
     expect(product).to.be.an('object');
     expect(product).to.deep.equal(productFromModel);
+  });
+
+  it('Retornando ids existentes no database', async function () {
+    sinon.stub(connection, 'execute').resolves([multipleIdResultFromDB]);
+
+    const INPUT_DATA = [1, 2, 4];
+    const foundIds = await productModel.findByMultipleIds(INPUT_DATA);
+
+    expect(foundIds).to.have.length(2);
+    expect(foundIds).not.to.include(4);
   });
 
   it('Inserindo product', async function () {

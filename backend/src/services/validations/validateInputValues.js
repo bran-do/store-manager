@@ -23,7 +23,9 @@ const validateNewSale = async (newSale) => {
   // Evitando repetições
   const filteredIds = productIds.filter((id, index, self) => self.indexOf(id) === index);
 
-  const foundIds = await productModel.findByMultipleIds(filteredIds);
+  const foundProducts = await productModel.findByMultipleIds(filteredIds);
+  const foundIds = foundProducts.map((product) => product.id);
+
   if (filteredIds.length !== foundIds.length) {
     return { status: 'NOT_FOUND', data: { message: 'Product not found' } };
   }

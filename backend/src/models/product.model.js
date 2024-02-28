@@ -26,7 +26,7 @@ const findByMultipleIds = async (idArray) => {
     idArray,
   );
 
-  return foundIds.map((object) => object.id);
+  return foundIds;
 };
 
 const insert = async (product) => {
