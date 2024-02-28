@@ -13,6 +13,7 @@ const {
   saleNotFoundService,
   newSaleFromModel,
   newSaleFromService,
+  deletedSaleFromService,
 } = require('../mocks/sale.mock');
 const { multipleIdResultFromModel } = require('../mocks/product.mock');
 
@@ -113,6 +114,31 @@ describe('SALE SERVICE:', function () {
 
     expect(result.status).to.equal('NOT_FOUND');
     expect(result.data).to.deep.equal({ message: 'Product not found' });
+  });
+
+  it('Deletando sale com sucesso', async function () {
+    sinon.stub(saleModel, 'findById').resolves(saleFromModel);
+    sinon.stub(saleModel, 'remove').resolves(undefined);
+
+    const ID_PARAM_INPUT = 1;
+    const result = await saleService.removeExistingSale(ID_PARAM_INPUT);
+
+    expect(result.status).to.equal(deletedSaleFromService.status);
+  });
+
+  it('Deletando sale com id inválido', async function () {
+    sinon.stub(saleModel, 'findById').resolves(noSaleList);
+
+    const ID_PARAM_INPUT = 99;
+
+    const invalidValueMessage = {
+      message: 'Sale not found',
+    };
+
+    const result = await saleService.removeExistingSale(ID_PARAM_INPUT);
+
+    expect(result.status).to.equal('NOT_FOUND');
+    expect(result.data).to.deep.equal(invalidValueMessage);
   });
 
   afterEach(function () { sinon.restore(); });

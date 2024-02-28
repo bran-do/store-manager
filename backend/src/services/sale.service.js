@@ -30,8 +30,18 @@ const insertNewSale = async (newSale) => {
   return { status: 'CREATED', data: saleInsideDB };
 };
 
+const removeExistingSale = async (id) => {
+  const [existingId] = await saleModel.findById(id);
+  if (!existingId) return { status: 'NOT_FOUND', data: { message: 'Sale not found' } };
+
+  await saleModel.remove(id);
+
+  return { status: 'NO_CONTENT', data: {} };
+};
+
 module.exports = {
   getAllSales,
   getSaleById,
   insertNewSale,
+  removeExistingSale,
 };

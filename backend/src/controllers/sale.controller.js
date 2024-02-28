@@ -22,8 +22,19 @@ const newSale = async (req, res) => {
   return res.status(mapStatusHTTP(status)).json(data);
 };
 
+const removeSale = async (req, res) => {
+  const { id } = req.params;
+  const { status, data } = await saleService.removeExistingSale(id);
+
+  if (status === 'NOT_FOUND') {
+    return res.status(mapStatusHTTP(status)).json(data);
+  }
+  return res.sendStatus(mapStatusHTTP(status));
+};
+
 module.exports = {
   allSales,
   saleById,
   newSale,
+  removeSale,
 };

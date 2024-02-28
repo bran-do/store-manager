@@ -50,5 +50,14 @@ describe('SALE MODEL:', function () {
     expect(insertedSale).to.deep.equal(newSaleFromModel);
   });
 
+  it('Deletando sale', async function () {
+    sinon.stub(connection, 'execute').resolves(undefined);
+
+    const INPUT_ID = 1;
+    const removeAction = await saleModel.remove(INPUT_ID);
+
+    expect(removeAction).to.equal(undefined);
+  });
+
   afterEach(function () { sinon.restore(); });
 });

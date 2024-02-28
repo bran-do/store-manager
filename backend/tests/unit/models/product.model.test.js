@@ -62,7 +62,7 @@ describe('PRODUCT MODEL:', function () {
     expect(updatedProduct).to.deep.equal(updatedProductFromModel);
   });
 
-  it('Deletando um product', async function () {
+  it('Deletando product', async function () {
     sinon.stub(connection, 'execute').resolves(undefined);
 
     const removeAction = await productModel.remove(1);

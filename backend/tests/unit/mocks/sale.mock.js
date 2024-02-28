@@ -91,6 +91,11 @@ const newSaleFromService = {
   },
 };
 
+const deletedSaleFromService = {
+  status: 'NO_CONTENT',
+  data: {},
+};
+
 module.exports = {
   saleFromModel,
   saleListFromModel,
@@ -102,4 +107,5 @@ module.exports = {
   saleListFromService,
   emptySaleListFromService,
   newSaleFromService,
+  deletedSaleFromService,
 };

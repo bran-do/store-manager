@@ -14,6 +14,7 @@ const {
   saleFromService,
   saleNotFoundService,
   newSaleFromService,
+  deletedSaleFromService,
 } = require('../mocks/sale.mock');
 
 const app = require('../../../src/app');
@@ -105,5 +106,30 @@ describe('SALE CONTROLLER:', function () {
 
     expect(res.status).to.equal(400);
     expect(res.body).to.deep.equal({ message: '"productId" is required' });
+  });
+
+  it('Deletando sale com sucesso', async function () {
+    sinon.stub(saleService, 'removeExistingSale').resolves(deletedSaleFromService);
+
+    const ID_PARAM_INPUT = 1;
+
+    const res = await chai.request(app)
+      .delete(`/sales/${ID_PARAM_INPUT}`);
+
+    expect(res.status).to.equal(204);  
+  });
+
+  it('Deletando sale com id inválido', async function () {
+    sinon.stub(saleService, 'removeExistingSale').resolves(saleNotFoundService);
+
+    const ID_PARAM_INPUT = 99;
+
+    const res = await chai.request(app)
+      .delete(`/sales/${ID_PARAM_INPUT}`);
+
+    const { status, body } = res;
+
+    expect(status).to.equal(404);
+    expect(body).to.deep.equal({ message: 'Sale not found' });
   });
 });

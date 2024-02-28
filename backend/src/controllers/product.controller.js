@@ -31,7 +31,6 @@ const updateProduct = async (req, res) => {
 
 const removeProduct = async (req, res) => {
   const { id } = req.params;
-
   const { status, data } = await productService.removeExistingProduct(id);
 
   if (status === 'NOT_FOUND') {
