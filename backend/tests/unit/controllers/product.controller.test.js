@@ -15,6 +15,7 @@ const {
   productNotFoundFromService,
   newProductFromService,
   updatedProductFromService,
+  deletedProductFromService,
 } = require('../mocks/product.mock');
 
 const app = require('../../../src/app');
@@ -108,6 +109,31 @@ describe('PRODUCT CONTROLLER', function () {
 
     expect(status).to.equal(200);
     expect(body).to.deep.equal(updatedProductFromService.data);
+  });
+
+  it('Deletando product com sucesso', async function () {
+    sinon.stub(productService, 'removeExistingProduct').resolves(deletedProductFromService);
+
+    const ID_PARAM_INPUT = 2;
+
+    const res = await chai.request(app)
+      .delete(`/products/${ID_PARAM_INPUT}`);
+
+    expect(res.status).to.equal(204);
+  });
+
+  it('Deletando product com id inválido', async function () {
+    sinon.stub(productService, 'removeExistingProduct').resolves(productNotFoundFromService);
+
+    const ID_PARAM_INPUT = 99;
+
+    const res = await chai.request(app)
+      .delete(`/products/${ID_PARAM_INPUT}`);
+
+    const { status, body } = res;
+
+    expect(status).to.equal(404);
+    expect(body).to.deep.equal({ message: 'Product not found' });
   });
 
   it('Retorna status code 500 para status não-mapeado no mapStatusHTTP', async function () {

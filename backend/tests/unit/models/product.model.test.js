@@ -62,5 +62,13 @@ describe('PRODUCT MODEL:', function () {
     expect(updatedProduct).to.deep.equal(updatedProductFromModel);
   });
 
+  it('Deletando um product', async function () {
+    sinon.stub(connection, 'execute').resolves(undefined);
+
+    const removeAction = await productModel.remove(1);
+
+    expect(removeAction).to.equal(undefined);
+  });
+
   afterEach(function () { sinon.restore(); });
 });

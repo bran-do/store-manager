@@ -38,9 +38,19 @@ const updateExistingProduct = async (productId, updateData) => {
   return { status: 'SUCCESSFUL', data: updatedProductInsideDB };
 };
 
+const removeExistingProduct = async (id) => {
+  const existingId = await productModel.findById(id);
+  if (!existingId) return { status: 'NOT_FOUND', data: { message: 'Product not found' } };
+
+  await productModel.remove(id);
+  
+  return { status: 'NO_CONTENT', data: {} };
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
   insertNewProduct,
   updateExistingProduct,
+  removeExistingProduct,
 };

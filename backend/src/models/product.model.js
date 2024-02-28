@@ -61,10 +61,18 @@ const update = async (productId, updateData) => {
   return camelize(productInsideDB);
 };
 
+const remove = async (id) => {
+  await connection.execute(
+    'DELETE FROM products WHERE id = ?',
+    [id],
+  );
+};
+
 module.exports = {
   findAll,
   findById,
   findByMultipleIds,
   insert,
   update,
+  remove,
 };

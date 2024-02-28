@@ -48,6 +48,10 @@ const updatedProductFromService = {
   data: updatedProductFromModel,
 };
 
+const deletedProductFromService = {
+  status: 'NO_CONTENT',
+};
+
 module.exports = {
   productFromModel,
   productListFromModel,
@@ -62,4 +66,5 @@ module.exports = {
   emptyProductListFromService,
   newProductFromService,
   updatedProductFromService,
+  deletedProductFromService,
 };

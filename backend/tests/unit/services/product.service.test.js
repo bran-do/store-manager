@@ -14,6 +14,7 @@ const {
   newProductFromService,
   updatedProductFromModel,
   updatedProductFromService,
+  deletedProductFromService,
 } = require('../mocks/product.mock');
 
 describe('PRODUCT SERVICE:', function () {
@@ -92,13 +93,13 @@ describe('PRODUCT SERVICE:', function () {
 
   it('Atualizando um product com name inválido', async function () {
     const ID_PARAM_INPUT = 4;
-    const INPUT_UPDATE_DATA_DATA = { name: 'Pá' };
+    const INPUT_UPDATE_DATA = { name: 'Pá' };
 
     const invalidValueMessage = {
       message: '"name" length must be at least 5 characters long',
     };
 
-    const result = await productService.updateExistingProduct(ID_PARAM_INPUT, INPUT_UPDATE_DATA_DATA);
+    const result = await productService.updateExistingProduct(ID_PARAM_INPUT, INPUT_UPDATE_DATA);
 
     expect(result.status).to.equal('INVALID_VALUE');
     expect(result.data).to.deep.equal(invalidValueMessage);
@@ -108,13 +109,38 @@ describe('PRODUCT SERVICE:', function () {
     sinon.stub(productModel, 'findById').resolves(undefined);
 
     const ID_PARAM_INPUT = 99;
-    const INPUT_UPDATE_DATA_DATA = { name: 'Pá de ferro' };
+    const INPUT_UPDATE_DATA = { name: 'Pá de ferro' };
 
     const invalidValueMessage = {
       message: 'Product not found',
     };
 
-    const result = await productService.updateExistingProduct(ID_PARAM_INPUT, INPUT_UPDATE_DATA_DATA);
+    const result = await productService.updateExistingProduct(ID_PARAM_INPUT, INPUT_UPDATE_DATA);
+
+    expect(result.status).to.equal('NOT_FOUND');
+    expect(result.data).to.deep.equal(invalidValueMessage);
+  });
+
+  it('Deletando product com sucesso', async function () {
+    sinon.stub(productModel, 'findById').resolves(productFromModel);
+    sinon.stub(productModel, 'remove').resolves(undefined);
+
+    const ID_PARAM_INPUT = 2;
+    const result = await productService.removeExistingProduct(ID_PARAM_INPUT);
+
+    expect(result.status).to.equal(deletedProductFromService.status);
+  });
+
+  it('Deletando product com id inválido', async function () {
+    sinon.stub(productModel, 'findById').resolves(undefined);
+
+    const ID_PARAM_INPUT = 99;
+
+    const invalidValueMessage = {
+      message: 'Product not found',
+    };
+
+    const result = await productService.removeExistingProduct(ID_PARAM_INPUT);
 
     expect(result.status).to.equal('NOT_FOUND');
     expect(result.data).to.deep.equal(invalidValueMessage);
