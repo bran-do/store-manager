@@ -26,8 +26,21 @@ const insertNewProduct = async (newProduct) => {
   return { status: 'CREATED', data: productInsideDB };
 };
 
+const updateExistingProduct = async (productId, updateData) => {
+  const invalidValue = validateNewProduct(updateData);
+  if (invalidValue) return invalidValue;
+
+  const product = await productModel.findById(productId);
+  if (!product) return { status: 'NOT_FOUND', data: { message: 'Product not found' } };
+
+  const updatedProductInsideDB = await productModel.update(productId, updateData);
+
+  return { status: 'SUCCESSFUL', data: updatedProductInsideDB };
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
   insertNewProduct,
+  updateExistingProduct,
 };

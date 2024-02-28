@@ -12,6 +12,8 @@ const {
   emptyProductListFromService,
   newProductFromModel,
   newProductFromService,
+  updatedProductFromModel,
+  updatedProductFromService,
 } = require('../mocks/product.mock');
 
 describe('PRODUCT SERVICE:', function () {
@@ -63,7 +65,7 @@ describe('PRODUCT SERVICE:', function () {
     expect(result.data).to.deep.equal(newProductFromService.data);
   });
 
-  it('Inserindo product com valores inválidos', async function () {
+  it('Inserindo product com name inválido', async function () {
     const INPUT_DATA = { name: 'Chá' };
 
     const invalidValueMessage = {
@@ -73,6 +75,48 @@ describe('PRODUCT SERVICE:', function () {
     const result = await productService.insertNewProduct(INPUT_DATA);
 
     expect(result.status).to.equal('INVALID_VALUE');
+    expect(result.data).to.deep.equal(invalidValueMessage);
+  });
+
+  it('Atualizando product com sucesso', async function () {
+    sinon.stub(productModel, 'update').resolves(updatedProductFromModel);
+    sinon.stub(productModel, 'findById').resolves({ name: 'Esquilo de pelúcia' });
+
+    const INPUT_ID = 4;
+    const INPUT_UPDATE_DATA = { name: 'Esquilo de plástico' };
+    const result = await productService.updateExistingProduct(INPUT_ID, INPUT_UPDATE_DATA);
+
+    expect(result.status).to.equal('SUCCESSFUL');
+    expect(result.data).to.deep.equal(updatedProductFromService.data);
+  });
+
+  it('Atualizando um product com name inválido', async function () {
+    const ID_PARAM_INPUT = 4;
+    const INPUT_UPDATE_DATA_DATA = { name: 'Pá' };
+
+    const invalidValueMessage = {
+      message: '"name" length must be at least 5 characters long',
+    };
+
+    const result = await productService.updateExistingProduct(ID_PARAM_INPUT, INPUT_UPDATE_DATA_DATA);
+
+    expect(result.status).to.equal('INVALID_VALUE');
+    expect(result.data).to.deep.equal(invalidValueMessage);
+  });
+
+  it('Atualizando um product com id inválido', async function () {
+    sinon.stub(productModel, 'findById').resolves(undefined);
+
+    const ID_PARAM_INPUT = 99;
+    const INPUT_UPDATE_DATA_DATA = { name: 'Pá de ferro' };
+
+    const invalidValueMessage = {
+      message: 'Product not found',
+    };
+
+    const result = await productService.updateExistingProduct(ID_PARAM_INPUT, INPUT_UPDATE_DATA_DATA);
+
+    expect(result.status).to.equal('NOT_FOUND');
     expect(result.data).to.deep.equal(invalidValueMessage);
   });
 

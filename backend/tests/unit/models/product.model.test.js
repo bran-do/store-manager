@@ -8,6 +8,7 @@ const {
   productListFromModel,
   newProductFromModel,
   multipleIdResultFromDB,
+  updatedProductFromModel,
 } = require('../mocks/product.mock');
 
 describe('PRODUCT MODEL:', function () {
@@ -48,6 +49,17 @@ describe('PRODUCT MODEL:', function () {
 
     expect(insertedProduct).to.be.an('object');
     expect(insertedProduct).to.deep.equal(newProductFromModel);
+  });
+
+  it('Atualizando product', async function () {
+    sinon.stub(connection, 'execute').resolves([[updatedProductFromModel]]);
+
+    const INPUT_ID = 4;
+    const INPUT_UPDATE_DATA = { name: 'Esquilo de plástico' };
+    const updatedProduct = await productModel.update(INPUT_ID, INPUT_UPDATE_DATA);
+
+    expect(updatedProduct).to.be.an('object');
+    expect(updatedProduct).to.deep.equal(updatedProductFromModel);
   });
 
   afterEach(function () { sinon.restore(); });

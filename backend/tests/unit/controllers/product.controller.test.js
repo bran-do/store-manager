@@ -14,6 +14,7 @@ const {
   productFromService,
   productNotFoundFromService,
   newProductFromService,
+  updatedProductFromService,
 } = require('../mocks/product.mock');
 
 const app = require('../../../src/app');
@@ -91,6 +92,22 @@ describe('PRODUCT CONTROLLER', function () {
 
     expect(status).to.equal(400);
     expect(body).to.deep.equal(missingFieldMessage);
+  });
+
+  it('Atualizando product com sucesso', async function () {
+    sinon.stub(productService, 'updateExistingProduct').resolves(updatedProductFromService);
+
+    const ID_PARAM_INPUT = 4;
+    const BODY_INPUT_DATA = { name: 'Esquilo de plástico' };
+    
+    const res = await chai.request(app)
+      .put(`/products/${ID_PARAM_INPUT}`)
+      .send(BODY_INPUT_DATA);
+
+    const { status, body } = res;
+
+    expect(status).to.equal(200);
+    expect(body).to.deep.equal(updatedProductFromService.data);
   });
 
   it('Retorna status code 500 para status não-mapeado no mapStatusHTTP', async function () {

@@ -1,6 +1,10 @@
 const camelize = require('camelize');
 const connection = require('./connection');
-const { getFormattedColumns, getFormattedPlaceholders } = require('../utils/queryFormatting');
+const { 
+  getFormattedColumns,
+  getFormattedPlaceholders,
+  getFormattedUpdateColumns,
+} = require('../utils/queryFormatting');
 
 const findAll = async () => {
   const [productList] = await connection.execute(
@@ -44,9 +48,23 @@ const insert = async (product) => {
   return camelize(productInsideDB);
 };
 
+const update = async (productId, updateData) => {
+  const columnsAndValues = getFormattedUpdateColumns(updateData);
+  const query = `UPDATE products SET ${columnsAndValues} WHERE id = ?`;
+  await connection.execute(query, [...Object.values(updateData), productId]);
+
+  const [[productInsideDB]] = await connection.execute(
+    'SELECT * FROM products WHERE id = ?',
+    [productId],
+  );
+
+  return camelize(productInsideDB);
+};
+
 module.exports = {
   findAll,
   findById,
   findByMultipleIds,
   insert,
+  update,
 };

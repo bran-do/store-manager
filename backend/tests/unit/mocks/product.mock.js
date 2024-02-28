@@ -11,6 +11,8 @@ const noProductList = [];
 
 const newProductFromModel = { id: 4, name: 'Esquilo de pelúcia' };
 
+const updatedProductFromModel = { id: 4, name: 'Esquilo de plástico' };
+
 const multipleIdResultFromDB = [{ id: 1 }, { id: 2 }];
 
 const multipleIdResultFromModel = [{ id: 1 }, { id: 2 }];
@@ -41,11 +43,17 @@ const newProductFromService = {
   data: newProductFromModel,
 };
 
+const updatedProductFromService = {
+  status: 'SUCCESSFUL',
+  data: updatedProductFromModel,
+};
+
 module.exports = {
   productFromModel,
   productListFromModel,
   noProductList,
   newProductFromModel,
+  updatedProductFromModel,
   multipleIdResultFromDB,
   multipleIdResultFromModel,
   productFromService,
@@ -53,4 +61,5 @@ module.exports = {
   productListFromService,
   emptyProductListFromService,
   newProductFromService,
+  updatedProductFromService,
 };
