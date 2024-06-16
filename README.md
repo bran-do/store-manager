@@ -5,6 +5,7 @@ Sua funcionalidade é dispor endpoints a fim de ler, cadastrar, atualizar e dele
 
 ##### Tecnologias utilizadas:
 - JavaScript
+- Node.js
 - Express.js
 - MySQL
 - Docker
